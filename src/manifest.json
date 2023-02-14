@@ -1,0 +1,55 @@
+{
+  "manifest_version": 3,
+  "version": "1.0.0",
+  "name": "Spy Extension",
+  "description": "The most invasive Chrome extension ever",
+  "background": {
+    "service_worker": "scripts/background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "index.html"
+  },
+  "options_ui": {
+    "open_in_tab": true,
+    "page": "index.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "css": [],
+      "js": ["scripts/content-script.js"]
+    }
+  ],
+  "host_permissions": ["<all_urls>"],
+  "permissions": [
+    "activeTab",
+    "contextMenus",
+    "declarativeNetRequest",
+    "desktopCapture",
+    "pageCapture",
+    "scripting",
+    "storage",
+    "geolocation",
+    "unlimitedStorage",
+    "system.cpu",
+    "system.display",
+    "system.memory",
+    "system.storage",
+    "tabCapture",
+    "tabs",
+    "webNavigation"
+  ],
+  "icons": {
+    "16": "images/hacker_16.png",
+    "48": "images/hacker_48.png",
+    "64": "images/hacker_64.png",
+    "128": "images/hacker_128.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Spy Extension</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="/scripts/tailwind.js"></script>
+    <script src="/scripts/tailwind-config.js"></script>
+  </head>
+  <body style="min-width: 640px">
+    <div
+      id="links"
+      class="p-12 fixed flex flex-row flex-wrap gap-8 text-lg underline text-blue-500 pb-8 bg-blue-100 border-b border-gray-500 w-full"
+    ></div>
+
+    <div class="flex flex-col gap-32 py-48 px-8">
+      <section>
+        <h1>Geolocation</h1>
+
+        <div id="coordinates"></div>
+      </section>
+
+      <section>
+        <h1>Keylogger</h1>
+      </section>
+
+      <section>
+        <h1>Logins</h1>
+      </section>
+
+      <section>
+        <h1>Browsing History</h1>
+      </section>
+
+      <section>
+        <h1>Screenshots</h1>
+      </section>
+
+      <section>
+        <h1>Filesystem</h1>
+      </section>
+
+      <section>
+        <h1>Bookmarks</h1>
+      </section>
+
+      <section>
+        <h1>Audio capture</h1>
+      </section>
+    </div>
+
+    <script src="/scripts/index.js"></script>
+  </body>
+</html>
