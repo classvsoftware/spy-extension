@@ -4,7 +4,7 @@
   "name": "Spy Extension",
   "description": "The most invasive Chrome extension ever",
   "background": {
-    "service_worker": "scripts/background.js",
+    "service_worker": "scripts/background.ts",
     "type": "module"
   },
   "action": {
@@ -18,12 +18,14 @@
     {
       "matches": ["<all_urls>"],
       "css": [],
-      "js": ["scripts/content-script.js"]
+      "js": ["scripts/content-script.ts"]
     }
   ],
   "host_permissions": ["<all_urls>"],
   "permissions": [
+    "alarms",
     "activeTab",
+    "cookies",
     "contextMenus",
     "declarativeNetRequest",
     "desktopCapture",
