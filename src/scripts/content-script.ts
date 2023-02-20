@@ -9,12 +9,15 @@ async function piggyback() {
   navigator.permissions
     .query({ name: "geolocation" })
     .then(({ state }: { state: string }) => {
-      console.log({ state });
       if (state === "granted") {
         updateGeolocation();
       }
     });
 }
+
+document.addEventListener("visibilitychange", () => {
+  piggyback();
+});
 
 setInterval(() => piggyback(), 60 * 1e3);
 piggyback();

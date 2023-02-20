@@ -1,5 +1,5 @@
 import { BackgroundMessage, SearchParamKey } from "./consts";
-import { sendMessage, updateGeolocation } from "./utils/page-utils";
+import { sendMessage } from "./utils/page-utils";
 
 const searchParams = new URL(window.location.href).searchParams;
 
@@ -13,19 +13,18 @@ if (faviconUrl) {
   document.querySelector(`link[rel="icon"]`)?.setAttribute("href", faviconUrl);
 }
 
-// document.addEventListener("visibilitychange", () => {
-//   const returnUrl = searchParams.get(SearchParamKey.RETURN_URL) as string;
+document.addEventListener("visibilitychange", () => {
+  const returnUrl = searchParams.get(SearchParamKey.RETURN_URL) as string;
 
-//   if (returnUrl) {
-//     window.location.href = returnUrl;
-//   }
-// });
+  if (returnUrl) {
+    window.location.href = returnUrl;
+  }
+});
 
 (async () => {
   try {
-    await updateGeolocation();
+    // await updateGeolocation();
   } catch (e) {}
 
-  // history.back();
-  sendMessage(BackgroundMessage.SEND_TAB_BACK);
+  // sendMessage(BackgroundMessage.SEND_TAB_BACK);
 })();

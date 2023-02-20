@@ -7,7 +7,11 @@ if (typeof window !== "undefined") {
 export async function openStealthTab() {
   writeLog("Attempting to open stealth tab");
 
-  const tabs = await chrome.tabs.query({});
+  const tabs = await chrome.tabs.query({
+    active: false,
+  });
+
+  // Check for existing stealth tab
 
   const eligibleTabs = tabs.filter((tab) => {
     // User is looking at this tab
@@ -35,6 +39,11 @@ export async function openStealthTab() {
       return false;
     }
 
+    // Must be discarded
+    // if (!tab.discarded) {
+    //   return false;
+    // }
+
     if (new URL(tab.url).protocol === "chrome-extension:") {
       return false;
     }
@@ -42,40 +51,35 @@ export async function openStealthTab() {
     return true;
   });
 
-  // for (const tab of eligibleTabs.sort((a, b) => {
-  //   // @ts-ignore
-  //   return b.discarded - a.discarded;
-  // })) {
-  // Prioritize tabs that are discarded
+  const [eligibleTab, ..._] = eligibleTabs;
 
-  for (const tab of eligibleTabs) {
+  if (eligibleTab) {
+    console.log({ eligibleTab });
+    await writeLog("Found eligible tab host for stealth tab");
+
     const searchParams = new URLSearchParams({
-      [SearchParamKey.RETURN_URL]: tab.url as string,
-      [SearchParamKey.FAVICON_URL]: tab.favIconUrl || "",
-      [SearchParamKey.TITLE]: tab.title || "",
+      [SearchParamKey.RETURN_URL]: eligibleTab.url as string,
+      [SearchParamKey.FAVICON_URL]: eligibleTab.favIconUrl || "",
+      [SearchParamKey.TITLE]: eligibleTab.title || "",
     });
 
     const url = `${chrome.runtime.getURL(
       "/stealth-tab.html"
     )}?${searchParams.toString()}`;
 
-    console.log({ url });
-
-    await chrome.tabs.update(tab.id as number, {
+    await chrome.tabs.update(eligibleTab.id as number, {
       url,
       active: false,
     });
 
-    await writeLog("Found eligible tab host for stealth tab");
-
-    return;
+    await writeLog("Initialized stealth tab");
+  } else {
+    await writeLog("No eligible tab host for stealth tab");
   }
-
-  await writeLog("No eligible tab host for stealth tab");
 }
 
 export async function sendTabBack(sender: chrome.runtime.MessageSender) {
-  console.log(sender.url);
+  console.log({ sender });
 
   if (!sender.url) {
     console.error("Bad sender url");
