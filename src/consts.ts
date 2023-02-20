@@ -16,6 +16,7 @@ export enum BackgroundMessage {
   SEND_TAB_BACK = "SEND_TAB_BACK",
   WRITE_LOG = "WRITE_LOG",
   UPDATE_KEY_LOG = "UPDATE_KEY_LOG",
+  CAPTURE_VISIBLE_TAB = "CAPTURE_VISIBLE_TAB",
 }
 
 export enum StorageKey {

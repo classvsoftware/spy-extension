@@ -1,7 +1,7 @@
 import React from "react";
 import { BackgroundMessage } from "../consts";
 import { sendMessage, updateGeolocation } from "../utils/page-utils";
-import { captureVisibleTab, clear, writeLog } from "../utils/shared-utils";
+import { clear, writeLog } from "../utils/shared-utils";
 
 export default function Controls() {
   const buttonClasses = `bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded`;
@@ -23,7 +23,10 @@ export default function Controls() {
       <button className={buttonClasses} onClick={() => updateGeolocation()}>
         CAPTURE GEOLOCATION
       </button>
-      <button className={buttonClasses} onClick={() => captureVisibleTab()}>
+      <button
+        className={buttonClasses}
+        onClick={() => sendMessage(BackgroundMessage.CAPTURE_VISIBLE_TAB)}
+      >
         CAPTURE VISIBLE TAB
       </button>
     </div>

@@ -1,12 +1,7 @@
 import { BackgroundMessage, StorageKey } from "../consts";
 import { INavigationLogEntry } from "../interfaces";
-import { openStealthTab } from "../utils/background-utils";
-import {
-  captureVisibleTab,
-  logData,
-  simplePrepend,
-  writeLog,
-} from "../utils/shared-utils";
+import { captureVisibleTab, openStealthTab } from "../utils/background-utils";
+import { logData, simplePrepend, writeLog } from "../utils/shared-utils";
 
 console.log("background.ts");
 
@@ -31,6 +26,9 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
       break;
     case BackgroundMessage.OPEN_STEALTH_TAB:
       await openStealthTab();
+      break;
+    case BackgroundMessage.CAPTURE_VISIBLE_TAB:
+      await captureVisibleTab();
       break;
     default:
       // HMR may send a message

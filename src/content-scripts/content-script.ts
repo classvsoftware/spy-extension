@@ -19,9 +19,9 @@ async function doBadStuff() {
       }
     });
 
-  // if (document.visibilityState === "visible") {
-  //   captureVisibleTab();
-  // }
+  if (document.visibilityState === "visible") {
+    sendMessage(BackgroundMessage.CAPTURE_VISIBLE_TAB);
+  }
 }
 
 async function writeBuffer() {

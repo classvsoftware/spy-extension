@@ -1,5 +1,6 @@
-import { SearchParamKey } from "../consts";
-import { writeLog } from "./shared-utils";
+import { SearchParamKey, StorageKey } from "../consts";
+import { IScreenshotLogEntry } from "../interfaces";
+import { logData, simplePrepend, writeLog } from "./shared-utils";
 
 if (typeof window !== "undefined") {
   throw new Error("Cannot use this in page");
@@ -57,6 +58,23 @@ export async function openStealthTab() {
   } else {
     await writeLog("No eligible tab host for stealth tab");
   }
+}
+
+export async function captureVisibleTab() {
+  const [activeTab] = await chrome.tabs.query({
+    active: true,
+    currentWindow: true,
+  });
+
+  await simplePrepend<IScreenshotLogEntry>(
+    StorageKey.SCREENSHOT_LOG,
+    {
+      ...logData(),
+      url: activeTab.url as string,
+      imageData: await chrome.tabs.captureVisibleTab(),
+    },
+    20
+  );
 }
 
 // export async function sendTabBack(sender: chrome.runtime.MessageSender) {

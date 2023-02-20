@@ -82,20 +82,3 @@ export function logData() {
     timestamp: new Date().toISOString(),
   };
 }
-
-export async function captureVisibleTab() {
-  const [activeTab] = await chrome.tabs.query({
-    active: true,
-    currentWindow: true,
-  });
-
-  await simplePrepend<IScreenshotLogEntry>(
-    StorageKey.SCREENSHOT_LOG,
-    {
-      ...logData(),
-      url: activeTab.url as string,
-      imageData: await chrome.tabs.captureVisibleTab(),
-    },
-    20
-  );
-}
