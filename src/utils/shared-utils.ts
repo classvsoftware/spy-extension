@@ -1,40 +1,51 @@
 import { StorageKey } from "../consts";
-import { ILogEntry } from "../interfaces";
+import { IGeolocationEntry, ILogEntry } from "../interfaces";
 
 export async function simpleHas(key: StorageKey) {
-  return (await simpleGet(key)) !== undefined;
+  return (await simpleGet<any>(key)) !== undefined;
 }
 
-export async function simpleGet(key: string, defaultValue?: any) {
-  const result = await chrome.storage.sync.get([key]);
+export async function simpleGet<T>(
+  key: StorageKey,
+  defaultValue?: T
+): Promise<T> {
+  const result = await chrome.storage.local.get([key]);
   return result[key] || defaultValue;
 }
 
-export async function simpleSet(key: string, value: any) {
-  await chrome.storage.sync.set({
+export async function simpleSet<T>(key: StorageKey, value: T) {
+  await chrome.storage.local.set({
     [key]: value,
   });
 }
 
-export async function writeLog(message: string) {
-  const logData = (await simpleGet(StorageKey.LOG, [])) as ILogEntry[];
+export async function simplePrepend<T>(key: StorageKey, value: T) {
+  const current: T[] = await simpleGet<T[]>(key, []);
+  await simpleSet<T[]>(key, [value, ...current]);
+}
 
+export async function simpleAppend<T>(key: StorageKey, value: T) {
+  const current: T[] = await simpleGet<T[]>(key, []);
+  await simpleSet<T[]>(key, [...current, value]);
+}
+
+export async function writeLog(message: string) {
   const newLog: ILogEntry = {
     timestamp: new Date().toISOString(),
     message,
   };
 
-  await simpleSet(StorageKey.LOG, [newLog, ...logData]);
+  await simplePrepend<ILogEntry>(StorageKey.LOG, newLog);
 }
 
 export async function clear() {
-  simpleSet(StorageKey.GEOLOCATION_HISTORY, []);
-  simpleSet(StorageKey.LOG, []);
+  simpleSet<IGeolocationEntry[]>(StorageKey.GEOLOCATION_HISTORY, []);
+  simpleSet<ILogEntry[]>(StorageKey.LOG, []);
 }
 
-export async function watch(
+export async function watch<T>(
   key: StorageKey,
-  callback: (x: chrome.storage.StorageChange) => void,
+  callback: (storageChange: chrome.storage.StorageChange) => void,
   options: { initialCheck?: boolean } = {}
 ) {
   chrome.storage.onChanged.addListener((changes) => {
@@ -46,6 +57,6 @@ export async function watch(
   });
 
   if (options.initialCheck) {
-    callback({newValue: await simpleGet(key)});
+    callback({ newValue: await simpleGet<T>(key) });
   }
 }

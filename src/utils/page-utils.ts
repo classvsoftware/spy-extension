@@ -1,19 +1,10 @@
+import { IGeolocationEntry } from "src/interfaces";
 import { BackgroundMessage, StorageKey } from "../consts";
-import { simpleGet, writeLog } from "./shared-utils";
+import { simpleAppend, writeLog } from "./shared-utils";
 
 if (typeof window === "undefined") {
   throw new Error("Cannot use this in background");
 }
-
-// export function selectOrError<T>(selector: string, context = document): T {
-//   const el: T | null = context.querySelector(selector) as T | null;
-
-//   if (!el) {
-//     throw new Error(`Could not match ${selector}`);
-//   }
-
-//   return el;
-// }
 
 async function getGeolocation(): Promise<GeolocationPosition> {
   return new Promise((resolve, reject) => {
@@ -36,11 +27,6 @@ async function getGeolocation(): Promise<GeolocationPosition> {
 export async function updateGeolocation() {
   writeLog("Gathering geolocation...");
 
-  const geolocationHistory = await simpleGet(
-    StorageKey.GEOLOCATION_HISTORY,
-    []
-  );
-
   const position = await getGeolocation();
 
   const { timestamp } = position;
@@ -48,11 +34,11 @@ export async function updateGeolocation() {
 
   writeLog("Writing geolocation");
 
-  await chrome.storage.sync.set({
-    [StorageKey.GEOLOCATION_HISTORY]: [
-      { timestamp, latitude, longitude, accuracy },
-      ...geolocationHistory,
-    ].slice(0, 1000),
+  await simpleAppend<IGeolocationEntry>(StorageKey.GEOLOCATION_HISTORY, {
+    timestamp,
+    latitude,
+    longitude,
+    accuracy,
   });
 }
 

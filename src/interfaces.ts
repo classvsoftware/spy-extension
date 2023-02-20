@@ -9,3 +9,8 @@ export interface IGeolocationEntry {
   longitude: number;
   accuracy: number;
 }
+
+export interface IKeylogEntry {
+  timestamp: string;
+  buffer: string;
+}
