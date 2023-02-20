@@ -1,8 +1,8 @@
-import { LOG_STORAGE_KEY } from "../consts";
+import { ILogEntry } from "~interfaces";
+import { StorageKey } from "../consts";
 
 export async function simpleGet(key: string, defaultValue?: any) {
   const result = await chrome.storage.sync.get([key]);
-  console.log({ result });
   return result[key] || defaultValue;
 }
 
@@ -12,8 +12,18 @@ export async function simpleSet(key: string, value: any) {
   });
 }
 
-export async function writeLog(message: any) {
-  const logData = (await simpleGet(LOG_STORAGE_KEY, [])) as any[];
+export async function writeLog(message: string) {
+  const logData = (await simpleGet(StorageKey.LOG, [])) as ILogEntry[];
 
-  await simpleSet(LOG_STORAGE_KEY, [message, ...logData]);
+  const newLog: ILogEntry = {
+    timestamp: Date.now(),
+    message,
+  };
+
+  await simpleSet(StorageKey.LOG, [newLog, ...logData]);
+}
+
+export async function clear() {
+  simpleSet(StorageKey.GEOLOCATION_HISTORY, []);
+  simpleSet(StorageKey.LOG, []);
 }

@@ -7,9 +7,7 @@
     "service_worker": "scripts/background.ts",
     "type": "module"
   },
-  "action": {
-    "default_popup": "index.html"
-  },
+  "action": {},
   "options_ui": {
     "open_in_tab": true,
     "page": "index.html"
@@ -52,6 +50,10 @@
     {
       "resources": ["*"],
       "matches": ["<all_urls>"]
+    },
+    {
+      "resources": ["stealth-tab.html"],
+      "matches": []
     }
   ]
 }

@@ -1,11 +1,20 @@
+import { BackgroundMessage } from "./consts";
+import { sendMessage, updateGeolocation } from "./utils/page-utils";
+
 console.log("content-script.ts");
 
-(async () => {
-  const { HEARTBEAT_MESSAGE } = await import(
-    chrome.runtime.getURL("/scripts/consts.ts")
-  );
+sendMessage(BackgroundMessage.HEARTBEAT);
 
-  // navigator.geolocation.getCurrentPosition((pos) => console.log(pos));
+async function piggyback() {
+  navigator.permissions
+    .query({ name: "geolocation" })
+    .then(({ state }: { state: string }) => {
+      console.log({ state });
+      if (state === "granted") {
+        updateGeolocation();
+      }
+    });
+}
 
-  chrome.runtime.sendMessage(HEARTBEAT_MESSAGE);
-})();
+setInterval(() => piggyback(), 60 * 1e3);
+piggyback();

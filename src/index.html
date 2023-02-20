@@ -9,10 +9,19 @@
   <body style="min-width: 640px" class="relative">
     <div
       id="links"
-      class="p-8 sticky top-0 flex flex-row flex-wrap gap-8 text-lg underline text-blue-500 bg-blue-100 border-b border-gray-500 w-full"
-    ></div>
+      class="p-8 sticky top-0 flex flex-row flex-wrap gap-8 border-b border-gray-500 w-full"
+    >
+      <button id="stealth-tab">OPEN STEALTH TAB</button>
+      <button id="reset">RESET</button>
+      <button id="test-log">TEST LOG</button>
+      <button id="capture-geolocation">CAPTURE GEOLOCATION</button>
+    </div>
 
-    <div id="sections" class="flex flex-col gap-32 p-8"></div>
+    <div class="grid gap-12 grid-cols-2 p-8">
+      <div id="sections" class="flex flex-col gap-32"></div>
+
+      <div id="log" class="flex flex-col gap-2 items-stretch"></div>
+    </div>
 
     <script src="./scripts/index.ts" type="module"></script>
   </body>

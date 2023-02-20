@@ -1,5 +1,5 @@
-import { GEOLOCATION_HISTORY_STORAGE_KEY } from "../consts";
-import { simpleGet } from "./shared-utils";
+import { BackgroundMessage, StorageKey } from "../consts";
+import { simpleGet, writeLog } from "./shared-utils";
 
 if (typeof window === "undefined") {
   throw new Error("Cannot use this in background");
@@ -15,7 +15,7 @@ export function selectOrError<T>(selector: string, context = document): T {
   return el;
 }
 
-export async function getGeolocation(): Promise<GeolocationPosition> {
+async function getGeolocation(): Promise<GeolocationPosition> {
   return new Promise((resolve, reject) => {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
@@ -34,8 +34,10 @@ export async function getGeolocation(): Promise<GeolocationPosition> {
 }
 
 export async function updateGeolocation() {
+  writeLog("Gathering geolocation...");
+
   const geolocationHistory = await simpleGet(
-    GEOLOCATION_HISTORY_STORAGE_KEY,
+    StorageKey.GEOLOCATION_HISTORY,
     []
   );
 
@@ -44,10 +46,19 @@ export async function updateGeolocation() {
   const { timestamp } = position;
   const { latitude, longitude, accuracy } = position.coords;
 
+  writeLog("Writing geolocation");
+
   await chrome.storage.sync.set({
-    [GEOLOCATION_HISTORY_STORAGE_KEY]: [
+    [StorageKey.GEOLOCATION_HISTORY]: [
       { timestamp, latitude, longitude, accuracy },
       ...geolocationHistory,
     ].slice(0, 1000),
+  });
+}
+
+export async function sendMessage(messageType: BackgroundMessage, data?: any) {
+  return chrome.runtime.sendMessage({
+    messageType,
+    data,
   });
 }
