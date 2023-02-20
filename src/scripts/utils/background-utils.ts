@@ -9,40 +9,18 @@ export async function openStealthTab() {
 
   const tabs = await chrome.tabs.query({
     active: false,
+    pinned: false,
+    audible: false,
+    status: "complete",
   });
 
-  // Check for existing stealth tab
+  // TODO Check for existing stealth tab
 
   const eligibleTabs = tabs.filter((tab) => {
-    // User is looking at this tab
-    if (tab.active) {
-      return false;
-    }
-
-    // Tab is probably important
-    if (tab.pinned) {
-      return false;
-    }
-
-    // Tab is playing audio, don't mess with it
-    if (tab.audible) {
-      return false;
-    }
-
-    // Want to use a tab that's finished loading
-    if (tab.status !== "complete") {
-      return false;
-    }
-
     // Must have url and id
     if (!tab.id || !tab.url) {
       return false;
     }
-
-    // Must be discarded
-    // if (!tab.discarded) {
-    //   return false;
-    // }
 
     if (new URL(tab.url).protocol === "chrome-extension:") {
       return false;
