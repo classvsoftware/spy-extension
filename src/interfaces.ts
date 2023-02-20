@@ -1,5 +1,5 @@
 export interface ILogEntry {
-  timestamp: number;
+  timestamp: string;
   message: string;
 }
 

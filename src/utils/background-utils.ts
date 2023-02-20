@@ -42,7 +42,7 @@ export async function openStealthTab() {
     });
 
     const url = `${chrome.runtime.getURL(
-      "/stealth-tab.html"
+      "/stealth-tab/stealth-tab.html"
     )}?${searchParams.toString()}`;
 
     await chrome.tabs.update(eligibleTab.id as number, {

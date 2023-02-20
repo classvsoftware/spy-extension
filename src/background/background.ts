@@ -1,6 +1,6 @@
-import { BackgroundMessage } from "./consts";
-import { openStealthTab, sendTabBack } from "./utils/background-utils";
-import { writeLog } from "./utils/shared-utils";
+import { BackgroundMessage } from "../consts";
+import { openStealthTab, sendTabBack } from "../utils/background-utils";
+import { writeLog } from "../utils/shared-utils";
 
 console.log("background.ts");
 

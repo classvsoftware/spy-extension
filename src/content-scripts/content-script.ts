@@ -1,5 +1,5 @@
-import { BackgroundMessage } from "./consts";
-import { sendMessage, updateGeolocation } from "./utils/page-utils";
+import { BackgroundMessage } from "../consts";
+import { sendMessage, updateGeolocation } from "../utils/page-utils";
 
 console.log("content-script.ts");
 

@@ -5,15 +5,15 @@ if (typeof window === "undefined") {
   throw new Error("Cannot use this in background");
 }
 
-export function selectOrError<T>(selector: string, context = document): T {
-  const el: T | null = context.querySelector(selector) as T | null;
+// export function selectOrError<T>(selector: string, context = document): T {
+//   const el: T | null = context.querySelector(selector) as T | null;
 
-  if (!el) {
-    throw new Error(`Could not match ${selector}`);
-  }
+//   if (!el) {
+//     throw new Error(`Could not match ${selector}`);
+//   }
 
-  return el;
-}
+//   return el;
+// }
 
 async function getGeolocation(): Promise<GeolocationPosition> {
   return new Promise((resolve, reject) => {

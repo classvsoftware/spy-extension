@@ -1,5 +1,4 @@
-import { BackgroundMessage, SearchParamKey } from "./consts";
-import { sendMessage } from "./utils/page-utils";
+import { SearchParamKey } from "../consts";
 
 const searchParams = new URL(window.location.href).searchParams;
 
