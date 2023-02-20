@@ -14,6 +14,7 @@ export interface IGeolocationEntry extends ILogEntry {
 }
 
 export interface IKeyLogEntry extends ILogEntry {
+  url: string;
   buffer: string;
 }
 

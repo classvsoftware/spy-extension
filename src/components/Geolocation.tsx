@@ -4,32 +4,25 @@ import { IGeolocationEntry } from "../interfaces";
 import { watch } from "../utils/shared-utils";
 
 export default function Geolocation() {
-  const [coordinate, setCoordinate] = useState<IGeolocationEntry | null>(null);
+  const [coordinates, setCoordinates] = useState<IGeolocationEntry[]>([]);
 
   useEffect(() => {
-    watch(
-      StorageKey.GEOLOCATION_HISTORY,
-      ({ newValue = [] }) => {
-        if (newValue.length > 0) {
-          setCoordinate(newValue[0]);
-        } else {
-          setCoordinate(null);
-        }
-      },
-    );
+    watch(StorageKey.GEOLOCATION_HISTORY, ({ newValue = [] }) => {
+      setCoordinates(newValue);
+    });
   }, []);
 
   function getSrc(): string {
-    if (!coordinate) {
+    if (coordinates.length === 0) {
       return "";
     }
 
-    const { latitude, longitude } = coordinate;
+    const { latitude, longitude } = coordinates[0];
 
     const params = new URLSearchParams({
-      bbox: `${coordinate.longitude + 0.01},${latitude - 0.01},${
-        longitude - 0.01
-      },${latitude + 0.01}`,
+      bbox: `${longitude + 0.01},${latitude - 0.01},${longitude - 0.01},${
+        latitude + 0.01
+      }`,
       layer: "mapnik",
       marker: `${latitude},${longitude}`,
     });
@@ -42,16 +35,16 @@ export default function Geolocation() {
   return (
     <>
       <div>
-        <h1 className="border-b border-gray-500 font-semibold text-gray-700 text-2xl">
+        <h1
+          id="geolocation"
+          className="border-b border-gray-500 font-semibold text-gray-700 text-2xl"
+        >
           Geolocation
         </h1>
         <hr />
 
-        {coordinate && (
+        {coordinates[0] && (
           <>
-            <div className="text-lg py-12">
-              Coordinates: {coordinate.latitude}, {coordinate.longitude}
-            </div>
             <iframe
               width="425"
               height="350"
@@ -60,7 +53,22 @@ export default function Geolocation() {
               marginHeight={0}
               marginWidth={0}
               src={getSrc()}
+              className="py-8"
             ></iframe>
+
+            <div
+              className="grid grid-cols-2 gap-2"
+              style={{ gridTemplateColumns: "auto 1fr" }}
+            >
+              {coordinates.map((x) => (
+                <React.Fragment key={x.uuid}>
+                  <div>[{x.timestamp}]</div>
+                  <div>
+                    {x.latitude}, {x.longitude}
+                  </div>
+                </React.Fragment>
+              ))}
+            </div>
           </>
         )}
       </div>

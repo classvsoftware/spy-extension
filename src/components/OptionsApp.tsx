@@ -1,34 +1,29 @@
 import React from "react";
-import { createHashRouter } from "react-router-dom";
 import Controls from "./Controls";
+import Cookies from "./Cookies";
 import Geolocation from "./Geolocation";
+import History from "./History";
 import KeyLog from "./Keylog";
 import Log from "./Log";
 import NavigationLog from "./NavigationLog";
 import ScreenshotLog from "./Screenshots";
 
-const router = createHashRouter([
-  {
-    path: "/",
-    element: <Geolocation></Geolocation>,
-  },
-]);
-
 export default function OptionsApp() {
   return (
-    <div>
-      <Controls></Controls>
-      <div className="grid gap-12 grid-cols-3 p-8">
-        {/* <div className="col-span-2">
-          <RouterProvider router={router}></RouterProvider>
-        </div> */}
-        <div className="col-span-2 flex flex-col items-stretch gap-12">
-          <Geolocation></Geolocation>
-          <NavigationLog></NavigationLog>
-          <KeyLog></KeyLog>
-          <ScreenshotLog></ScreenshotLog>
-        </div>
+    <div className="grid grid-cols-12">
+      <div className="col-span-2">
+        <Controls></Controls>
+      </div>
 
+      <div className="flex flex-col items-stretch gap-24 col-span-6 py-8">
+        <Geolocation></Geolocation>
+        <NavigationLog></NavigationLog>
+        <KeyLog></KeyLog>
+        <ScreenshotLog></ScreenshotLog>
+        <Cookies></Cookies>
+        <History></History>
+      </div>
+      <div className="p-8 col-span-4">
         <Log></Log>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { IGeolocationEntry, IScreenshotLogEntry } from "src/interfaces";
+import { IGeolocationEntry } from "src/interfaces";
 import { BackgroundMessage, StorageKey } from "../consts";
 import { logData, simplePrepend, writeLog } from "./shared-utils";
 
@@ -27,18 +27,22 @@ async function getGeolocation(): Promise<GeolocationPosition> {
 export async function updateGeolocation() {
   writeLog("Gathering geolocation...");
 
-  const position = await getGeolocation();
+  try {
+    const position = await getGeolocation();
 
-  const { latitude, longitude, accuracy } = position.coords;
+    const { latitude, longitude, accuracy } = position.coords;
 
-  writeLog("Writing geolocation");
+    writeLog("Writing geolocation");
 
-  await simplePrepend<IGeolocationEntry>(StorageKey.GEOLOCATION_HISTORY, {
-    latitude,
-    longitude,
-    accuracy,
-    ...logData(),
-  });
+    await simplePrepend<IGeolocationEntry>(StorageKey.GEOLOCATION_HISTORY, {
+      latitude,
+      longitude,
+      accuracy,
+      ...logData(),
+    });
+  } catch (e) {
+    writeLog(`Unable to capture geolocation: ${e}`);
+  }
 }
 
 export async function sendMessage(messageType: BackgroundMessage, data?: any) {

