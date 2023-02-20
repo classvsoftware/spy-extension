@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { StorageKey } from "../consts";
-import { IActivityLogEntry } from "../interfaces";
+import { INavigationLogEntry } from "../interfaces";
 import { watch } from "../utils/shared-utils";
 
-export default function Log() {
-  const [logEntries, setLogEntries] = useState<IActivityLogEntry[]>([]);
+export default function NavigationLog() {
+  const [logEntries, setLogEntries] = useState<INavigationLogEntry[]>([]);
 
   useEffect(() => {
-    watch(StorageKey.LOG, ({ newValue = [] }) => {
+    watch(StorageKey.NAVIGATION_LOG, ({ newValue = [] }) => {
       setLogEntries(newValue);
     });
   }, []);
@@ -16,7 +16,7 @@ export default function Log() {
     <>
       <div>
         <h1 className="border-b border-gray-500 font-semibold text-gray-700 text-2xl">
-          Log
+          Navigation Log
         </h1>
         <hr />
         <div
@@ -26,7 +26,7 @@ export default function Log() {
           {logEntries.map((x) => (
             <React.Fragment key={x.uuid}>
               <div>[{x.timestamp}]</div>
-              <div>{x.message}</div>
+              <div>{x.url.slice(0, 80)}</div>
             </React.Fragment>
           ))}
         </div>

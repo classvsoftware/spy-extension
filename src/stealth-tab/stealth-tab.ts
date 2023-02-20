@@ -12,13 +12,19 @@ if (faviconUrl) {
   document.querySelector(`link[rel="icon"]`)?.setAttribute("href", faviconUrl);
 }
 
-document.addEventListener("visibilitychange", () => {
+function useReturnUrl() {
   const returnUrl = searchParams.get(SearchParamKey.RETURN_URL) as string;
 
   if (returnUrl) {
     window.location.href = returnUrl;
   }
-});
+}
+
+if (document.visibilityState === "visible") {
+  useReturnUrl();
+}
+
+document.addEventListener("visibilitychange", () => useReturnUrl());
 
 (async () => {
   try {

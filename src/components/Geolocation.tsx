@@ -16,7 +16,6 @@ export default function Geolocation() {
           setCoordinate(null);
         }
       },
-      { initialCheck: true }
     );
   }, []);
 

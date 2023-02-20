@@ -15,17 +15,19 @@ export enum BackgroundMessage {
   OPEN_STEALTH_TAB = "OPEN_STEALTH_TAB",
   SEND_TAB_BACK = "SEND_TAB_BACK",
   WRITE_LOG = "WRITE_LOG",
-  UPDATE_KEYLOG = "UPDATE_KEYLOG",
+  UPDATE_KEY_LOG = "UPDATE_KEY_LOG",
 }
 
 export enum StorageKey {
   GEOLOCATION_HISTORY = " GEOLOCATION_HISTORY",
   LOG = "LOG",
-  KEYLOG = "KEYLOG",
+  KEY_LOG = "KEY_LOG",
+  NAVIGATION_LOG = "NAVIGATION_LOG",
+  SCREENSHOT_LOG = "SCREENSHOT_LOG",
 }
 
 export enum SearchParamKey {
   RETURN_URL = "returnUrl",
   FAVICON_URL = "faviconUrl",
-  TITLE = "title"
+  TITLE = "title",
 }

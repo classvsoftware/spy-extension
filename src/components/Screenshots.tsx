@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
+import { IScreenshotLogEntry } from "src/interfaces";
 import { StorageKey } from "../consts";
-import { IActivityLogEntry } from "../interfaces";
 import { watch } from "../utils/shared-utils";
 
-export default function Log() {
-  const [logEntries, setLogEntries] = useState<IActivityLogEntry[]>([]);
+export default function ScreenshotLog() {
+  const [screenshotEntries, setScreenshotEntries] = useState<
+    IScreenshotLogEntry[]
+  >([]);
 
   useEffect(() => {
-    watch(StorageKey.LOG, ({ newValue = [] }) => {
-      setLogEntries(newValue);
+    watch(StorageKey.SCREENSHOT_LOG, ({ newValue = [] }) => {
+      setScreenshotEntries(newValue);
     });
   }, []);
 
@@ -16,17 +18,15 @@ export default function Log() {
     <>
       <div>
         <h1 className="border-b border-gray-500 font-semibold text-gray-700 text-2xl">
-          Log
+          Screenshots
         </h1>
         <hr />
-        <div
-          className="grid grid-cols-2 gap-2"
-          style={{ gridTemplateColumns: "auto 1fr" }}
-        >
-          {logEntries.map((x) => (
+        <div className="flex flex-col items-stretch gap-2">
+          {screenshotEntries.map((x) => (
             <React.Fragment key={x.uuid}>
               <div>[{x.timestamp}]</div>
-              <div>{x.message}</div>
+              <div>{x.url}</div>
+              <img src={x.imageData} />
             </React.Fragment>
           ))}
         </div>

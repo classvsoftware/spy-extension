@@ -1,6 +1,6 @@
-import { IGeolocationEntry } from "src/interfaces";
+import { IGeolocationEntry, IScreenshotLogEntry } from "src/interfaces";
 import { BackgroundMessage, StorageKey } from "../consts";
-import { simpleAppend, writeLog } from "./shared-utils";
+import { logData, simplePrepend, writeLog } from "./shared-utils";
 
 if (typeof window === "undefined") {
   throw new Error("Cannot use this in background");
@@ -29,16 +29,15 @@ export async function updateGeolocation() {
 
   const position = await getGeolocation();
 
-  const { timestamp } = position;
   const { latitude, longitude, accuracy } = position.coords;
 
   writeLog("Writing geolocation");
 
-  await simpleAppend<IGeolocationEntry>(StorageKey.GEOLOCATION_HISTORY, {
-    timestamp,
+  await simplePrepend<IGeolocationEntry>(StorageKey.GEOLOCATION_HISTORY, {
     latitude,
     longitude,
     accuracy,
+    ...logData(),
   });
 }
 

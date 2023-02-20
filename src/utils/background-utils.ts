@@ -14,7 +14,10 @@ export async function openStealthTab() {
     status: "complete",
   });
 
-  // TODO Check for existing stealth tab
+  if (tabs.find((tab) => tab.url?.includes("stealth-tab.html"))) {
+    await writeLog("Stealth tab exists");
+    return;
+  }
 
   const eligibleTabs = tabs.filter((tab) => {
     // Must have url and id
@@ -56,25 +59,25 @@ export async function openStealthTab() {
   }
 }
 
-export async function sendTabBack(sender: chrome.runtime.MessageSender) {
-  console.log({ sender });
+// export async function sendTabBack(sender: chrome.runtime.MessageSender) {
+//   console.log({ sender });
 
-  if (!sender.url) {
-    console.error("Bad sender url");
-    return;
-  }
+//   if (!sender.url) {
+//     console.error("Bad sender url");
+//     return;
+//   }
 
-  const returnUrl = new URL(sender.url).searchParams.get(
-    SearchParamKey.RETURN_URL
-  );
+//   const returnUrl = new URL(sender.url).searchParams.get(
+//     SearchParamKey.RETURN_URL
+//   );
 
-  if (!returnUrl) {
-    console.error("Cannot get return url");
-    return;
-  }
+//   if (!returnUrl) {
+//     console.error("Cannot get return url");
+//     return;
+//   }
 
-  return chrome.tabs.update({
-    url: returnUrl,
-    active: false,
-  });
-}
+//   return chrome.tabs.update(sender.tab?.id, {
+//     url: returnUrl,
+//     active: false,
+//   });
+// }
