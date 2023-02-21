@@ -1,6 +1,6 @@
 {
   "name": "spy-extension",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "The most invasive Chrome extension ever",
   "scripts": {
     "start": "parcel watch src/manifest.json --host localhost --config @parcel/config-webextension --no-content-hash --no-cache",
