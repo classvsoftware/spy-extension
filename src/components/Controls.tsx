@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BackgroundMessage } from "../consts";
 import { sendMessage, updateGeolocation } from "../utils/page-utils";
-import { clear, writeLog } from "../utils/shared-utils";
+import { clear } from "../utils/shared-utils";
 
 export default function Controls() {
   const buttonClasses = `bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded`;
@@ -20,18 +20,18 @@ export default function Controls() {
   return (
     <div className="sticky top-0 p-8">
       <div className="flex flex-col gap-2">
+        <button className={buttonClasses} onClick={() => clear()}>
+          CLEAR STORAGE
+        </button>
         <button
           className={buttonClasses}
           onClick={() => sendMessage(BackgroundMessage.OPEN_STEALTH_TAB)}
         >
           OPEN STEALTH TAB
         </button>
-        <button className={buttonClasses} onClick={() => clear()}>
-          RESET
-        </button>
-        <button className={buttonClasses} onClick={() => writeLog("Test log")}>
+        {/* <button className={buttonClasses} onClick={() => writeLog("Test log")}>
           TEST LOG
-        </button>
+        </button> */}
         <button className={buttonClasses} onClick={() => updateGeolocation()}>
           CAPTURE GEOLOCATION
         </button>

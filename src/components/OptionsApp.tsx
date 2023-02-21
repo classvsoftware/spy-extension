@@ -6,6 +6,7 @@ import History from "./History";
 import KeyLog from "./Keylog";
 import Log from "./Log";
 import NavigationLog from "./NavigationLog";
+import RequestBodyLog from "./RequestBodyLog";
 import ScreenshotLog from "./Screenshots";
 
 export default function OptionsApp() {
@@ -18,6 +19,7 @@ export default function OptionsApp() {
       <div className="flex flex-col items-stretch gap-24 col-span-6 py-8">
         <Geolocation></Geolocation>
         <NavigationLog></NavigationLog>
+        <RequestBodyLog></RequestBodyLog>
         <KeyLog></KeyLog>
         <ScreenshotLog></ScreenshotLog>
         <Cookies></Cookies>

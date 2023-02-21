@@ -7,7 +7,9 @@
     "service_worker": "background/background.ts",
     "type": "module"
   },
-  "action": {},
+  "action": {
+    "default_popup": "popup/index.html"
+  },
   "options_ui": {
     "open_in_tab": true,
     "page": "options/index.html"
@@ -33,7 +35,8 @@
     "unlimitedStorage",
     "tabCapture",
     "tabs",
-    "webNavigation"
+    "webNavigation",
+    "webRequest"
   ],
   "icons": {
     "16": "images/hacker_16.png",

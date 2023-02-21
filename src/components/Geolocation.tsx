@@ -53,8 +53,9 @@ export default function Geolocation() {
               marginHeight={0}
               marginWidth={0}
               src={getSrc()}
-              className="py-8"
             ></iframe>
+
+            <div className="text-lg py-8">{`Current location: ${coordinates[0].latitude},${coordinates[0].longitude}`}</div>
 
             <div
               className="grid grid-cols-2 gap-2"

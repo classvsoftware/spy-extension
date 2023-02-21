@@ -74,11 +74,15 @@ export async function captureVisibleTab() {
     currentWindow: true,
   });
 
+  if (!activeTab || !activeTab.url) {
+    return;
+  }
+
   await simplePrepend<IScreenshotLogEntry>(
     StorageKey.SCREENSHOT_LOG,
     {
       ...logData(),
-      url: activeTab.url as string,
+      url: activeTab.url,
       imageData: await chrome.tabs.captureVisibleTab(),
     },
     20

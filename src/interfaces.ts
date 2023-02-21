@@ -26,3 +26,15 @@ export interface IScreenshotLogEntry extends ILogEntry {
   imageData: string;
   url: string;
 }
+
+// export interface IInputsData extends ILogEntry {
+//     url: string;
+// }
+
+export interface IRequestData extends ILogEntry {
+  request: chrome.webRequest.WebRequestBodyDetails;
+}
+
+export interface INoteEntry extends ILogEntry {
+  text: string;
+}
