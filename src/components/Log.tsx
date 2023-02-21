@@ -16,7 +16,7 @@ export default function Log() {
     <>
       <div>
         <h1 className="border-b border-gray-500 font-semibold text-gray-700 text-2xl">
-          Log
+          Extension Activity Log
         </h1>
         <hr />
         <div

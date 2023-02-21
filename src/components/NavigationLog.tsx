@@ -15,7 +15,10 @@ export default function NavigationLog() {
   return (
     <>
       <div>
-        <h1 id="navigation-log" className="border-b border-gray-500 font-semibold text-gray-700 text-2xl">
+        <h1
+          id="navigation-log"
+          className="border-b border-gray-500 font-semibold text-gray-700 text-2xl"
+        >
           Navigation Log
         </h1>
         <hr />
@@ -26,7 +29,7 @@ export default function NavigationLog() {
           {logEntries.map((x) => (
             <React.Fragment key={x.uuid}>
               <div>[{x.timestamp}]</div>
-              <div>{x.url.slice(0, 80)}</div>
+              <div>{x.url}</div>
             </React.Fragment>
           ))}
         </div>

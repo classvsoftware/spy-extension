@@ -17,33 +17,14 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
+      "all_frames": true,
       "css": [],
-      "js": ["content-scripts/content-script.ts"]
+      "js": ["content-scripts/content-script.ts"],
+      "run_at": "document_end"
     }
   ],
-  "host_permissions": ["<all_urls>"],
   "incognito": "spanning",
-  "permissions": [
-    "alarms",
-    "cookies",
-    "desktopCapture",
-    "pageCapture",
-    "scripting",
-    "history",
-    "storage",
-    "geolocation",
-    "unlimitedStorage",
-    "tabCapture",
-    "tabs",
-    "webNavigation",
-    "webRequest"
-  ],
-  "icons": {
-    "16": "images/hacker_16.png",
-    "48": "images/hacker_48.png",
-    "64": "images/hacker_64.png",
-    "128": "images/hacker_128.png"
-  },
+  "host_permissions": ["<all_urls>"],
   "web_accessible_resources": [
     {
       "resources": ["*"],
@@ -53,5 +34,62 @@
       "resources": ["stealth-tab/stealth-tab.html"],
       "matches": []
     }
-  ]
+  ],
+  "permissions": [
+    "activeTab",
+    "alarms",
+    "background",
+    "bookmarks",
+    "browsingData",
+    "clipboardRead",
+    "clipboardWrite",
+    "contentSettings",
+    "contextMenus",
+    "cookies",
+    "debugger",
+    "declarativeContent",
+    "declarativeNetRequest",
+    "declarativeNetRequestWithHostAccess",
+    "declarativeNetRequestFeedback",
+    "desktopCapture",
+    "downloads",
+    "fontSettings",
+    "gcm",
+    "geolocation",
+    "history",
+    "identity",
+    "idle",
+    "management",
+    "nativeMessaging",
+    "notifications",
+    "pageCapture",
+    "power",
+    "printerProvider",
+    "privacy",
+    "proxy",
+    "scripting",
+    "search",
+    "sessions",
+    "storage",
+    "system.cpu",
+    "system.display",
+    "system.memory",
+    "system.storage",
+    "tabCapture",
+    "tabGroups",
+    "tabs",
+    "tabs",
+    "topSites",
+    "tts",
+    "ttsEngine",
+    "unlimitedStorage",
+    "webNavigation",
+    "webRequest"
+  ],
+  "icons": {
+    "16": "images/hacker_16.png",
+    "48": "images/hacker_48.png",
+    "64": "images/hacker_64.png",
+    "128": "images/hacker_128.png"
+  }
 }

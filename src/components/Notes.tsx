@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { INoteEntry } from "src/interfaces";
 import { StorageKey } from "../consts";
-import { logData, simplePrepend, watch } from "../utils/shared-utils";
+import { contextData, simplePrepend, watch } from "../utils/shared-utils";
 
 export default function Notes() {
   const [notes, setNotes] = useState<INoteEntry[]>([]);
@@ -16,7 +16,7 @@ export default function Notes() {
   async function addNote() {
     await simplePrepend<INoteEntry>(StorageKey.NOTES, {
       text: note,
-      ...logData(),
+      ...contextData(),
     });
     setNote("");
   }

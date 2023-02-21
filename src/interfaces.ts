@@ -35,6 +35,11 @@ export interface IRequestData extends ILogEntry {
   request: chrome.webRequest.WebRequestBodyDetails;
 }
 
+export interface IClipboardData extends ILogEntry {
+    text: string;
+    url: string;
+}
+
 export interface INoteEntry extends ILogEntry {
   text: string;
 }

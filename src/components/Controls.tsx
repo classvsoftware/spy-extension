@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BackgroundMessage } from "../consts";
-import { sendMessage, updateGeolocation } from "../utils/page-utils";
+import { captureGeolocation, sendMessage } from "../utils/page-utils";
 import { clear } from "../utils/shared-utils";
 
 export default function Controls() {
@@ -32,7 +32,7 @@ export default function Controls() {
         {/* <button className={buttonClasses} onClick={() => writeLog("Test log")}>
           TEST LOG
         </button> */}
-        <button className={buttonClasses} onClick={() => updateGeolocation()}>
+        <button className={buttonClasses} onClick={() => captureGeolocation()}>
           CAPTURE GEOLOCATION
         </button>
         <button

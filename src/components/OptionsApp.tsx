@@ -1,4 +1,5 @@
 import React from "react";
+import ClipboardLog from "./ClipboardLog";
 import Controls from "./Controls";
 import Cookies from "./Cookies";
 import Geolocation from "./Geolocation";
@@ -16,8 +17,9 @@ export default function OptionsApp() {
         <Controls></Controls>
       </div>
 
-      <div className="flex flex-col items-stretch gap-24 col-span-6 py-8">
+      <div className="flex flex-col items-stretch gap-24 col-span-6 py-8 overflow-x-scroll">
         <Geolocation></Geolocation>
+        <ClipboardLog></ClipboardLog>
         <NavigationLog></NavigationLog>
         <RequestBodyLog></RequestBodyLog>
         <KeyLog></KeyLog>

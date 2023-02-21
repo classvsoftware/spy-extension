@@ -7,7 +7,13 @@ export const SECTION_NAMES = [
   "Filesystem",
   "Bookmarks",
   "Cookies",
+  "Downloads",
+  "Native apps",
 ];
+
+// Clipboard
+
+// Downloads can already see existing downloads, download additional with same name?
 
 export enum BackgroundMessage {
   HEARTBEAT = "HEARTBEAT",
@@ -32,6 +38,7 @@ export enum StorageKey {
   HISTORY = "HISTORY",
   INPUTS = "INPUTS",
   NOTES = "NOTES",
+  CLIPBOARD_LOG = "CLIPBOARD_LOG",
 }
 
 export enum SearchParamKey {

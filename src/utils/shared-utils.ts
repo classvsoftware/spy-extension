@@ -41,7 +41,7 @@ export async function simpleAppend<T>(
 export async function writeLog(message: string) {
   const newLog: IActivityLogEntry = {
     message,
-    ...logData(),
+    ...contextData(),
   };
 
   await simplePrepend<IActivityLogEntry>(StorageKey.LOG, newLog);
@@ -66,7 +66,7 @@ export async function watch<T>(
   callback({ newValue: await simpleGet<T>(key) });
 }
 
-export function logData() {
+export function contextData() {
   return {
     uuid: uuidv4() as string,
     timestamp: new Date().toISOString(),

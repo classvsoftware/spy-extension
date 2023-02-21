@@ -28,8 +28,9 @@ document.addEventListener("visibilitychange", () => useReturnUrl());
 
 (async () => {
   try {
-    // await updateGeolocation();
-  } catch (e) {}
-
-  // sendMessage(BackgroundMessage.SEND_TAB_BACK);
+    // Fake doing stuff
+    await new Promise((resolve) => setTimeout(resolve, 60000));
+  } finally {
+    useReturnUrl();
+  }
 })();
