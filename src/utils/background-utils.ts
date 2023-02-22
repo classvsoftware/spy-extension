@@ -1,5 +1,5 @@
 import { SearchParamKey, StorageKey } from "../consts";
-import { IScreenshotLogEntry } from "../interfaces";
+import type { IScreenshotLogEntry } from "../interfaces";
 import {
   contextData,
   simplePrepend,
@@ -54,7 +54,7 @@ export async function openStealthTab() {
     });
 
     const url = `${chrome.runtime.getURL(
-      "/stealth-tab/stealth-tab.html"
+      "/tabs/stealth-tab.html"
     )}?${searchParams.toString()}`;
 
     // Retry this a few times, it intermittently errors

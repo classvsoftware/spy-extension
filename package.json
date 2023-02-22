@@ -1,11 +1,11 @@
 {
   "name": "spy-extension",
-  "version": "2.0.0",
+  "displayName": "Spy Extension",
+  "version": "3.0.0",
   "description": "The most invasive Chrome extension ever",
   "scripts": {
-    "start": "parcel watch src/manifest.json --host localhost --config @parcel/config-webextension --no-content-hash --no-cache",
-    "build": "parcel build src/manifest.json --config @parcel/config-webextension --no-content-hash --no-cache",
-    "clean": "rm -r .parcel-cache dist"
+    "dev": "plasmo dev",
+    "build": "plasmo build"
   },
   "repository": {
     "type": "git",
@@ -14,13 +14,11 @@
   "license": "MIT",
   "homepage": "https://github.com/msfrisbie/spy-extension#readme",
   "devDependencies": {
-    "@parcel/config-webextension": "^2.8.3",
-    "@parcel/transformer-sass": "2.8.3",
+    "plasmo": "^0.65.0",
     "@types/chrome": "^0.0.216",
     "@types/lodash": "^4.14.191",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
-    "parcel": "^2.8.3",
     "postcss": "^8.4.21",
     "postcss-import": "^15.1.0",
     "process": "^0.11.10",
@@ -33,5 +31,62 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.8.1",
     "uuid": "^9.0.0"
+  },
+  "manifest": {
+    "incognito": "spanning",
+    "host_permissions": [
+      "<all_urls>"
+    ],
+    "permissions": [
+      "activeTab",
+      "alarms",
+      "background",
+      "bookmarks",
+      "browsingData",
+      "clipboardRead",
+      "clipboardWrite",
+      "contentSettings",
+      "contextMenus",
+      "cookies",
+      "debugger",
+      "declarativeContent",
+      "declarativeNetRequest",
+      "declarativeNetRequestWithHostAccess",
+      "declarativeNetRequestFeedback",
+      "desktopCapture",
+      "downloads",
+      "fontSettings",
+      "gcm",
+      "geolocation",
+      "history",
+      "identity",
+      "idle",
+      "management",
+      "nativeMessaging",
+      "notifications",
+      "pageCapture",
+      "power",
+      "printerProvider",
+      "privacy",
+      "proxy",
+      "scripting",
+      "search",
+      "sessions",
+      "storage",
+      "system.cpu",
+      "system.display",
+      "system.memory",
+      "system.storage",
+      "tabCapture",
+      "tabGroups",
+      "tabs",
+      "tabs",
+      "topSites",
+      "tts",
+      "ttsEngine",
+      "unlimitedStorage",
+      "webNavigation",
+      "webRequest"
+    ]
   }
 }
