@@ -1,5 +1,5 @@
 import { BackgroundMessage, StorageKey } from "../consts";
-import { INavigationLogEntry, IRequestData } from "../interfaces";
+import type { INavigationLogEntry, IRequestData } from "../interfaces";
 import {
   captureCookies,
   captureHistory,

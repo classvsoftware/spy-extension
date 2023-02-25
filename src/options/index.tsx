@@ -1,14 +1,14 @@
 import React from "react";
-import ClipboardLog from "./ClipboardLog";
-import Controls from "./Controls";
-import Cookies from "./Cookies";
-import Geolocation from "./Geolocation";
-import History from "./History";
-import KeyLog from "./Keylog";
-import Log from "./Log";
-import NavigationLog from "./NavigationLog";
-import RequestBodyLog from "./RequestBodyLog";
-import ScreenshotLog from "./Screenshots";
+import ClipboardLog from "~components/ClipboardLog";
+import Controls from "~components/Controls";
+import Cookies from "~components/Cookies";
+import Geolocation from "~components/Geolocation";
+import History from "~components/History";
+import KeyLog from "~components/Keylog";
+import Log from "~components/Log";
+import NavigationLog from "~components/NavigationLog";
+import RequestBodyLog from "~components/RequestBodyLog";
+import ScreenshotLog from "~components/Screenshots";
 
 export default function OptionsApp() {
   return (
